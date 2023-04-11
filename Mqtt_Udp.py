@@ -7,7 +7,7 @@ ip.connect(("8.8.8.8", 80))
 ip = (str)(ip.getsockname()[0])  #获取本机ip
 
 UDP_HOST = '0.0.0.0'
-UDP_PORT = 8082
+UDP_PORT = 3964
 MQTT_HOST ='43.143.48.34'
 MQTT_PORT = 1883
 MQTT_USER = 'eryuan'
@@ -36,13 +36,29 @@ def mqtt_connect():
 
 
 # 发布消息
+# def mqtt_publish():
+#     """发布主题为'mqtt/demo',内容为'Demo text',服务质量为1"""
+#     mqttClient = mqtt_connect()
+#     while(True):
+#         data, addr = s.recvfrom(1024)  # 返回数据和接入连接的（服务端）地址,得到服务端发来的数据和地址
+#         data = data.decode()  # 解码数据
+#         # print('[Recieved data]:', data, '[Server addr]:', addr)
+#         print('接收到UDP数据:', data, '来自:', addr)
+#         mqttClient.publish('bayes/Keeps', data, 1)
+#         # mqttClient.loop_stop()
+
 def mqtt_publish():
     """发布主题为'mqtt/demo',内容为'Demo text',服务质量为1"""
     mqttClient = mqtt_connect()
     while(True):
         data, addr = s.recvfrom(1024)  # 返回数据和接入连接的（服务端）地址,得到服务端发来的数据和地址
-        data = data.decode()  # 解码数据
-        # print('[Recieved data]:', data, '[Server addr]:', addr)
-        print('接收到UDP数据:', data, '来自:', addr)
-        mqttClient.publish('bayes/Keeps', data, 1)
+        hex_data = data.hex().upper()
+
+        data_string = ''.join(hex_data)
+        print(data_string)
+
+        data1 = " ".join([data_string[i:i + 2] for i in range(0, len(data_string), 2)])
+
+        print('接收到UDP数据:', data1, '来自:', addr)
+        mqttClient.publish('bayes/Keeps', data1, 1)
         # mqttClient.loop_stop()
