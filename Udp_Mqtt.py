@@ -2,8 +2,8 @@ from paho.mqtt import client as mqtt
 from socket import *
 
 
-UDP_HOST = '192.168.0.87'
-UDP_PORT = 8081
+UDP_HOST = '192.168.0.238'
+UDP_PORT = 3964
 MQTT_HOST ='43.143.48.34'
 MQTT_PORT = 1883
 MQTT_USER = 'eryuan'
@@ -25,9 +25,14 @@ def on_message(client, userdata, msg):
     res=str(msg.payload.decode('gb2312'))
     print("接收到MQTT主题:" + msg.topic + " 消息:" +res)
 
+    # 将十六进制消息解码为二进制数据
+    binary_data = bytes.fromhex(res)
+
     print("Udp转Mqtt,ip:", UDP_HOST, "端口:", UDP_PORT)
     data = res
-    udp_socket.sendto(data.encode('gbk'), dest_addr)  #发送数据
+    udp_socket.sendto(binary_data, dest_addr)  # 发送数据
+
+    # udp_socket.sendto(data.encode('gbk'), dest_addr)  #发送数据
     # udp_socket.close()
 
 
